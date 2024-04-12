@@ -5,7 +5,9 @@ function Form() {
     <form className="w-80 space-y-3 mt-2">
       <Input placeholder="title" name="title" />
       <Input placeholder="description" name="description" />
-      <Button className="w-full">Submit</Button>
+      <Button className="w-full" variant={"default"}>
+        Submit
+      </Button>
     </form>
   );
 }
