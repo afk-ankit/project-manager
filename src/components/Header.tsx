@@ -1,11 +1,12 @@
 import Link from "next/link";
 import { Button } from "./ui/button";
 import { ModeToggle } from "./mode-toggler";
+import MobileNavbar from "./MobileNavbar";
 
-export const Navbar = () => {
+export const Header = () => {
   return (
     <header>
-      <nav className="flex items-center container py-2">
+      <nav className=" items-center container py-2 lg:flex hidden ">
         <Button variant={"link"} className="ml-auto" asChild>
           <Link href={"/"} className="font-bold">
             Something
@@ -23,6 +24,7 @@ export const Navbar = () => {
         </Button>
         <ModeToggle />
       </nav>
+      <MobileNavbar />
       <hr />
     </header>
   );

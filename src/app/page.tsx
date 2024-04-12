@@ -4,11 +4,11 @@ export default function Home() {
   return (
     <main className="container pt-4 grid place-items-center min-h-[90vh]">
       <div className="w-1/2 space-y-8">
-        <h1 className="text-6xl text-center font-semibold">
+        <h1 className="text-5xl lg:text-6xl text-center font-semibold">
           THE NEXT GEN <br />
           <span className="tracking-wide text-green-500">PROJECT MANAGER</span>
         </h1>
-        <p className="text-center text-lg font-semibold">
+        <p className="text-center lg:text-lg font-semibold">
           Unlimited project creation and management.
           <br />
           Free and easy to use both for students and teachers.
