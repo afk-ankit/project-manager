@@ -8,8 +8,8 @@ export const Header = () => {
     <header>
       <nav className=" items-center container py-2 lg:flex hidden ">
         <Button variant={"link"} className="ml-auto" asChild>
-          <Link href={"/"} className="font-bold">
-            Something
+          <Link href={"/project"} className="font-bold">
+            Project
           </Link>
         </Button>
         <Button variant={"link"} asChild>

@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 export default function Home() {
   return (
     <main className="container pt-4 grid place-items-center min-h-[90vh]">
-      <div className="w-1/2 space-y-8">
+      <div className="lg:w-1/2 space-y-8">
         <h1 className="text-5xl lg:text-6xl text-center font-semibold">
           THE NEXT GEN <br />
           <span className="tracking-wide text-green-500">PROJECT MANAGER</span>
@@ -15,7 +15,7 @@ export default function Home() {
           <br />
           No purchase or frustating adds.
         </p>
-        <div className="space-x-2 flex w-2/3 m-auto">
+        <div className="space-x-2 flex lg:w-2/3 m-auto">
           <Button className="flex-1 font-bold">Login</Button>
           <Button className="flex-1 font-bold" variant={"outline"}>
             Register
