@@ -1,4 +1,4 @@
-import ProjectCreateForm from "@/components/ProjectCreate";
+import { ProjectCreateForm } from "@/components/ProjectCreate";
 
 function Project() {
   return (
