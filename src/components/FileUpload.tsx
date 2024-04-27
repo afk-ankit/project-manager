@@ -10,10 +10,11 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
-import { UploadIcon } from "lucide-react";
-import { useState } from "react";
-import { ControllerRenderProps } from "react-hook-form";
+import { Cross, LoaderCircle, UploadIcon, X } from "lucide-react";
+import { useRef, useState } from "react";
+import { ControllerRenderProps, useFieldArray } from "react-hook-form";
 import { ProjectType } from "./ProjectCreate";
+import { useToast } from "./ui/use-toast";
 
 const FileUpload = ({
   field,
@@ -21,6 +22,17 @@ const FileUpload = ({
   field: ControllerRenderProps<ProjectType, "file">;
 }) => {
   const [openFiles, setOpenFiles] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
+  const fileRef = useRef<HTMLInputElement>(null);
+  const [uploadDisabled, setUploadDisabled] = useState(true);
+  const { fields, append, prepend, remove, swap, move, insert } = useFieldArray(
+    { name: "file" },
+  );
+  const FakeUpload = () => {
+    return new Promise((resolve, reject) => setTimeout(resolve, 3000));
+  };
+  const { toast } = useToast();
+
   return (
     <Dialog open={openFiles} onOpenChange={setOpenFiles}>
       <DialogTrigger asChild>
@@ -32,7 +44,7 @@ const FileUpload = ({
           )}
         >
           <UploadIcon className="mr-2 h-4 w-4" />
-          <span>Upload file</span>
+          <span>{field.value ? "Add more" : "Upload"}</span>
         </Button>
       </DialogTrigger>
       <DialogContent>
@@ -42,31 +54,74 @@ const FileUpload = ({
         <div className="space-y-4">
           <Input
             type="file"
+            ref={fileRef}
             onChange={(e) => {
-              const url = e.target.value;
-              field.onChange({
-                ...field.value,
-                url,
-              });
-            }}
-          />
-          <Input
-            type="text"
-            placeholder="Enter the name of the file"
-            value={field.value?.name}
-            onChange={(e) => {
-              const name = e.target.value;
-              field.onChange({
-                ...field.value,
-                name,
-              });
+              if (e.target?.files && e.target.files?.length > 0) {
+                setUploadDisabled(false);
+              }
             }}
           />
         </div>
-        <DialogFooter className="flex-col lg:justify-start">
-          <DialogClose asChild>
-            <Button className="flex-1">Upload</Button>
-          </DialogClose>
+        {field.value.length > 0 && (
+          <div>
+            <h1 className="text-md">Uploaded File</h1>
+            <div className="mt-2 cursor-pointer">
+              {field.value.map((url, index) => (
+                <div key={index} className="flex items-center justify-between">
+                  <span className="text-sm text-muted-foreground line-clamp-1">
+                    {url}
+                  </span>
+                  <Button
+                    variant={"ghost"}
+                    size={"icon"}
+                    onClick={() => remove(index)}
+                  >
+                    <X className="size-5" />
+                  </Button>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+        <DialogFooter className="flex-col lg:justify-start gap-2">
+          <Button
+            className="flex-1"
+            disabled={uploadDisabled || isUploading}
+            onClick={async () => {
+              try {
+                if (
+                  fileRef.current?.files &&
+                  fileRef.current.files?.length > 0
+                ) {
+                  setIsUploading(true);
+                  await FakeUpload();
+                  setIsUploading(false);
+                  append(fileRef.current.files[0].name);
+                  fileRef.current.value = "";
+                  setUploadDisabled(true);
+                  toast({
+                    description: "File uploaded successfully",
+                    title: "Success",
+                  });
+                }
+              } catch (error) {
+                if (error instanceof Error) {
+                  console.log(error.message);
+                  setIsUploading(false);
+                  toast({ description: "error" });
+                }
+              }
+            }}
+          >
+            {isUploading ? (
+              <>
+                <LoaderCircle className="mr-2 size-4 animate-spin" /> Uploading
+                please wait
+              </>
+            ) : (
+              "Upload file"
+            )}
+          </Button>
           <DialogClose asChild>
             <Button variant={"secondary"} className="flex-1">
               Close

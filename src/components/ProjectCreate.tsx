@@ -25,10 +25,7 @@ const projectSchema = z.object({
     .max(200, "Description too long"),
   student: z.string().array().nonempty("At least one student must be selected"),
   deadline: z.date(),
-  file: z.object({
-    name: z.string().min(1, "File name must be provided"),
-    url: z.string().min(1, "File must be provided"),
-  }),
+  file: z.string().array().nonempty("At least one file must be uploaded"),
 });
 
 export type ProjectType = z.infer<typeof projectSchema>;
@@ -37,7 +34,7 @@ export function ProjectCreateForm() {
   const form = useForm<ProjectType>({
     resolver: zodResolver(projectSchema),
     defaultValues: {
-      file: undefined,
+      file: [],
       title: "",
       description: "",
       student: [],
