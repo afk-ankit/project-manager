@@ -16,13 +16,10 @@ import { frameworks, labelFormatter } from "@/lib/student_utils";
 import { cn } from "@/lib/utils";
 import { CheckIcon, SearchIcon } from "lucide-react";
 import { useState } from "react";
-import { ControllerRenderProps } from "react-hook-form";
 import { ProjectType } from "./ProjectCreate";
-function StudentPicker({
-  field,
-}: {
-  field: ControllerRenderProps<ProjectType, "student">;
-}) {
+import { useController } from "react-hook-form";
+function StudentPicker() {
+  const { field } = useController<ProjectType, "student">({ name: "student" });
   const [openStudents, setOpenStudents] = useState(false);
   return (
     <>

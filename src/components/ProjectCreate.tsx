@@ -1,23 +1,18 @@
 "use client";
+import { postProject } from "@/actions/action";
 import { Button } from "@/components/ui/button";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
+import { Form } from "@/components/ui/form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import StudentPicker from "./StudentPicker";
 import DatePicker from "./DatePicker";
 import FileUpload from "./FileUpload";
+import { ControlledInput } from "./ProjectControlledInput";
+import { ControlledTextArea } from "./ProjectControlledTextArea";
+import { FormInput } from "./ProjectFormInput";
+import StudentPicker from "./StudentPicker";
 
-const projectSchema = z.object({
+export const projectSchema = z.object({
   title: z.string().min(1, "Title cannot be empty").max(20, "Title too long"),
   description: z
     .string()
@@ -25,7 +20,7 @@ const projectSchema = z.object({
     .max(200, "Description too long"),
   student: z.string().array().nonempty("At least one student must be selected"),
   deadline: z.date(),
-  file: z.string().array().nonempty("At least one file must be uploaded"),
+  file: z.string().array(),
 });
 
 export type ProjectType = z.infer<typeof projectSchema>;
@@ -42,87 +37,32 @@ export function ProjectCreateForm() {
     },
   });
 
+  const formSubmit = async (data: ProjectType) => {
+    form.reset();
+    await postProject(data);
+  };
+
   return (
     <Form {...form}>
       <form
-        onSubmit={form.handleSubmit((data: ProjectType) => {
-          console.log(data);
-        })}
+        onSubmit={form.handleSubmit(formSubmit)}
         className="space-y-4 lg:w-[800px] m-auto"
       >
-        <FormField
-          control={form.control}
-          name="title"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Title</FormLabel>
-              <FormControl>
-                <Input
-                  placeholder="Enter the title for your project"
-                  {...field}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="description"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Description</FormLabel>
-              <FormControl>
-                <Textarea
-                  placeholder="Enter the description for your project"
-                  {...field}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="file"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>File Upload</FormLabel>
-              <br />
-              <FormControl>
-                <FileUpload field={field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="student"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Assign Student</FormLabel>
-              <FormControl>
-                <StudentPicker field={field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="deadline"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Deadline</FormLabel>
-              <br />
-              <FormControl>
-                <DatePicker field={field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+        <FormInput name="title">
+          <ControlledInput />
+        </FormInput>
+        <FormInput name="description">
+          <ControlledTextArea />
+        </FormInput>
+        <FormInput name="file">
+          <FileUpload />
+        </FormInput>
+        <FormInput name="student">
+          <StudentPicker />
+        </FormInput>
+        <FormInput name="deadline">
+          <DatePicker />
+        </FormInput>
         <Button type="submit" className="w-full">
           Submit
         </Button>

@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 
 export default function Home() {
   return (
-    <main className="container pt-4 grid place-items-center min-h-[90vh]">
+    <section className="grid place-items-center h-[80vh]">
       <div className="lg:w-1/2 space-y-8">
         <h1 className="text-5xl lg:text-6xl text-center font-semibold">
           THE NEXT GEN <br />
@@ -22,6 +22,6 @@ export default function Home() {
           </Button>
         </div>
       </div>
-    </main>
+    </section>
   );
 }

@@ -28,7 +28,7 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <Header />
-          {children}
+          <main className="min-h-screen container py-8 ">{children}</main>
           <Footer />
           <Toaster />
         </ThemeProvider>

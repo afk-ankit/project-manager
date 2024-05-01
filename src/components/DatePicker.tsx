@@ -8,13 +8,12 @@ import {
 import { cn } from "@/lib/utils";
 import { compareAsc, format } from "date-fns";
 import { CalendarIcon } from "lucide-react";
-import { ControllerRenderProps } from "react-hook-form";
+import { useController } from "react-hook-form";
 import { ProjectType } from "./ProjectCreate";
-function DatePicker({
-  field,
-}: {
-  field: ControllerRenderProps<ProjectType, "deadline">;
-}) {
+function DatePicker() {
+  const { field } = useController<ProjectType, "deadline">({
+    name: "deadline",
+  });
   return (
     <Popover>
       <PopoverTrigger asChild>
