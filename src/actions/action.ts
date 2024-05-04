@@ -1,6 +1,7 @@
 "use server";
 import { z } from "zod";
 import prisma from "../../prisma/db";
+import { action } from "@/lib/safe-action";
 
 const projectSchema = z.object({
   title: z.string().min(1, "Title cannot be empty").max(20, "Title too long"),
@@ -15,19 +16,17 @@ const projectSchema = z.object({
 
 type ProjectType = z.infer<typeof projectSchema>;
 
-export const postProject = async (data: ProjectType) => {
-  const parsed = projectSchema.safeParse(data);
-  if (!parsed.success) {
-    return { message: "Invalid form Data" };
-  }
+export const postProject = action(projectSchema, async (data: ProjectType) => {
   const newProject = await prisma.project.create({
     data: {
-      title: parsed.data.title,
-      deadline: parsed.data.deadline,
-      description: parsed.data.description,
-      attachments: { create: parsed.data.file.map((url) => ({ url })) },
+      title: data.title,
+      deadline: data.deadline,
+      description: data.description,
+      attachments: { create: data.file.map((url) => ({ url })) },
     },
   });
-
-  return { data: newProject };
-};
+  return {
+    message: "Project Created Successfully",
+    data: newProject,
+  };
+});

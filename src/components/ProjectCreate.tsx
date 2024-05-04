@@ -11,6 +11,9 @@ import { ControlledInput } from "./ProjectControlledInput";
 import { ControlledTextArea } from "./ProjectControlledTextArea";
 import { FormInput } from "./ProjectFormInput";
 import StudentPicker from "./StudentPicker";
+import { useAction } from "next-safe-action/hooks";
+import { useToast } from "./ui/use-toast";
+import { LoaderCircle } from "lucide-react";
 
 export const projectSchema = z.object({
   title: z.string().min(1, "Title cannot be empty").max(20, "Title too long"),
@@ -26,6 +29,24 @@ export const projectSchema = z.object({
 export type ProjectType = z.infer<typeof projectSchema>;
 
 export function ProjectCreateForm() {
+  const { toast } = useToast();
+  const { status, execute } = useAction(postProject, {
+    onError(error) {
+      if (error.fetchError)
+        toast({ variant: "destructive", description: error.fetchError });
+      if (error.serverError)
+        toast({ variant: "destructive", description: error.serverError });
+      if (error.validationErrors)
+        toast({
+          variant: "destructive",
+          description: "Validation Error",
+        });
+    },
+    onSuccess(data) {
+      toast({ description: data.message });
+      form.reset();
+    },
+  });
   const form = useForm<ProjectType>({
     resolver: zodResolver(projectSchema),
     defaultValues: {
@@ -37,9 +58,8 @@ export function ProjectCreateForm() {
     },
   });
 
-  const formSubmit = async (data: ProjectType) => {
-    form.reset();
-    await postProject(data);
+  const formSubmit = (data: ProjectType) => {
+    execute(data);
   };
 
   return (
@@ -63,8 +83,19 @@ export function ProjectCreateForm() {
         <FormInput name="deadline">
           <DatePicker />
         </FormInput>
-        <Button type="submit" className="w-full">
-          Submit
+        <Button
+          type="submit"
+          className="w-full flex"
+          disabled={status === "executing"}
+        >
+          {status === "executing" ? (
+            <>
+              <LoaderCircle className="mr-2 size-4 animate-spin" />
+              Creating
+            </>
+          ) : (
+            "Create"
+          )}
         </Button>
       </form>
     </Form>

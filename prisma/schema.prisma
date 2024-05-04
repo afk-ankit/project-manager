@@ -26,15 +26,14 @@ model Student {
   semester          Int
   Univeristy        Univeristy        @relation(fields: [univeristy_id], references: [id])
   univeristy_id     Int
-  assigned_projects Project[]
-  AssignedProject   AssignedProject[]
+  assigned_projects AssignedProject[]
 }
 
 model Professor {
-  emp_id            String            @id
-  name              String
-  department        Department
-  assigned_projects AssignedProject[]
+  emp_id      String            @id
+  name        String
+  department  Department
+  assigned_to AssignedProject[]
 }
 
 model Univeristy {
@@ -49,7 +48,6 @@ model Project {
   description       String
   deadline          DateTime
   attachments       ProjectFiles[]
-  assigned_to       Student[]
   assigned_projects AssignedProject[]
 }
 
