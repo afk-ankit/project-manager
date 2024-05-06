@@ -19,27 +19,31 @@ enum Department {
 
 model Student {
   roll_no           String            @id
+  name              String
   year_joining      DateTime
   year_passing      DateTime
   course            String
   department        Department
   semester          Int
-  Univeristy        Univeristy        @relation(fields: [univeristy_id], references: [id])
-  univeristy_id     Int
+  university        University        @relation(fields: [university_id], references: [id])
+  university_id     Int
   assigned_projects AssignedProject[]
 }
 
 model Professor {
-  emp_id      String            @id
-  name        String
-  department  Department
-  assigned_to AssignedProject[]
+  emp_id        String            @id
+  name          String
+  department    Department
+  assigned_to   AssignedProject[]
+  university    University?       @relation(fields: [univeristy_id], references: [id])
+  univeristy_id Int?
 }
 
-model Univeristy {
-  id      Int       @id @default(autoincrement())
-  name    String
-  student Student[]
+model University {
+  id        Int         @id @default(autoincrement())
+  name      String
+  student   Student[]
+  professor Professor[]
 }
 
 model Project {
@@ -54,14 +58,14 @@ model Project {
 model ProjectFiles {
   id         Int     @id @default(autoincrement())
   url        String
-  Project    Project @relation(fields: [project_id], references: [id])
+  project    Project @relation(fields: [project_id], references: [id])
   project_id Int
 }
 
 model AssignedProject {
   Student      Student   @relation(fields: [student_id], references: [roll_no])
   student_id   String
-  Project      Project   @relation(fields: [project_id], references: [id])
+  project      Project   @relation(fields: [project_id], references: [id])
   project_id   Int
   assigned_by  Professor @relation(fields: [professor_id], references: [emp_id])
   professor_id String

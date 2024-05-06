@@ -13,7 +13,7 @@ import { cn } from "@/lib/utils";
 import { LoaderCircle, UploadIcon, X } from "lucide-react";
 import { useRef, useState } from "react";
 import { useController, useFieldArray } from "react-hook-form";
-import { ProjectType } from "./ProjectCreate";
+import { ProjectType } from "@/lib/project-types";
 import { useToast } from "./ui/use-toast";
 import { supabase } from "@/supabase/init";
 

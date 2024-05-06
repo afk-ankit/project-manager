@@ -9,7 +9,7 @@ import { cn } from "@/lib/utils";
 import { compareAsc, format } from "date-fns";
 import { CalendarIcon } from "lucide-react";
 import { useController } from "react-hook-form";
-import { ProjectType } from "./ProjectCreate";
+import { ProjectType } from "@/lib/project-types";
 function DatePicker() {
   const { field } = useController<ProjectType, "deadline">({
     name: "deadline",

@@ -7,11 +7,11 @@ import {
   FormMessage,
 } from "./ui/form";
 import { ReactNode } from "react";
-import { ProjectType } from "@/lib/project-types";
+import { StudentType } from "@/lib/student-types";
 
 type FormInputProps = {
   children: ReactNode;
-  name: FieldPath<ProjectType>;
+  name: FieldPath<StudentType>;
 };
 
 export const FormInput = ({ children, name }: FormInputProps) => {
@@ -20,7 +20,7 @@ export const FormInput = ({ children, name }: FormInputProps) => {
       name={name}
       render={() => (
         <FormItem>
-          <FormLabel>Title</FormLabel>
+          <FormLabel className="capitalize">{name}</FormLabel>
           <FormControl>{children}</FormControl>
           <FormMessage />
         </FormItem>
